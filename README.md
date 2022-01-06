@@ -162,6 +162,13 @@ emoji characters are here to help you.
 - **Alfred the Alert** 🚨 will occasionally show up in the test failures with
   potential explanations for why the tests are failing.
 
+## Notes
+
+- When testing we should consider the two users, The end user that's interacting
+  with our code (clicking buttons/etc), and the developer user that's actually
+  using our code (rendering it, calling our functions, etc.). And we should
+  avoid the [Test User](https://kentcdodds.com/blog/avoid-the-test-user)
+
 ## Contributors
 
 Thanks goes to these wonderful people
