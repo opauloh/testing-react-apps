@@ -169,6 +169,19 @@ emoji characters are here to help you.
   using our code (rendering it, calling our functions, etc.). And we should
   avoid the [Test User](https://kentcdodds.com/blog/avoid-the-test-user)
 
+### Simulating user clicks
+
+- We can use `MouseEvent` with `dispatchEvent` to simulate a user clicking on a
+  button, this way we have more control over the event.
+
+```js
+const event = new MouseEvent('click', {
+  bubbles: true, // this way React can take advantage of Event Delegation
+  cancelable: true, // that's the default when user clicks on a button
+  button: 0, // left click, 1 for middle, 2 for right
+})
+```
+
 ## Contributors
 
 Thanks goes to these wonderful people
