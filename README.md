@@ -188,7 +188,8 @@ const event = new MouseEvent('click', {
   needed to interact with the DOM. Also includes handy helpers like autocleanup
 
 - `@testing-library/jest-dom` is a library that adds helpful assertions to
-  `jest` for interacting with the DOM, i.e:
+  `jest` for interacting with the DOM, it should be preferred to use the helper
+  methods because they will be mor useful with the error message i.e:
 
 ```js
 // instead of:
@@ -196,6 +197,10 @@ expect(message.textContent).toBe('Current count: 1')
 // we can do:
 expect(message).toHaveTextContent('Current count: 1')
 ```
+
+Before: ![](img/README-20220106143820.png)
+
+With Jest DOM: ![](img/README-20220106143912.png)
 
 ## Contributors
 
