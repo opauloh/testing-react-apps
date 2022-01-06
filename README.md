@@ -182,6 +182,21 @@ const event = new MouseEvent('click', {
 })
 ```
 
+### Libraries
+
+- Use libraries such as `@testing-library` that implements all the boilerplate
+  needed to interact with the DOM. Also includes handy helpers like autocleanup
+
+- `@testing-library/jest-dom` is a library that adds helpful assertions to
+  `jest` for interacting with the DOM, i.e:
+
+```js
+// instead of:
+expect(message.textContent).toBe('Current count: 1')
+// we can do:
+expect(message).toHaveTextContent('Current count: 1')
+```
+
 ## Contributors
 
 Thanks goes to these wonderful people
