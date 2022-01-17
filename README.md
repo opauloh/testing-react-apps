@@ -202,6 +202,39 @@ Before: ![](img/README-20220106143820.png)
 
 With Jest DOM: ![](img/README-20220106143912.png)
 
+- Our user won't care about the order of the elements or implementation details,
+  so we don't either, prepare tests to work as if the information were displayed
+  in any order:
+
+So instead of:
+
+```js
+const [decrement, increment] = container.querySelectorAll('button') // if we change the order it breaks
+const message = container.firstChild.querySelector('div') // if we move div to last position it breaks
+```
+
+You can do:
+
+```js
+const decrement = screen.getByRole('button', {name: /decrement/i}) // no matter where the button is as long the name has the word decrement
+const increment = screen.getByRole('button', {name: /increment/i})
+const message = screen.getByText(/current count/i)
+```
+
+- 📜 Read up on `screen` here:
+  https://testing-library.com/docs/dom-testing-library/api-queries#screen
+
+[Testing Implementation Details](https://kentcdodds.com/blog/testing-implementation-details)
+and how to
+[Avoid the Test User](https://kentcdodds.com/blog/avoid-the-test-user)
+
+- Prefer to use userEvent over `fireEvent`, because when user clicks the buttons
+  is also a bit of an implementation detail. We're firing a single event, when
+  we actually should be firing several other events like the user does. When a
+  user clicks a button, they first have to move their mouse over the button
+  which will fire some mouse events. They'll also mouse down and mouse up on the
+  input and focus it! Lots of events!
+
 ## Contributors
 
 Thanks goes to these wonderful people
