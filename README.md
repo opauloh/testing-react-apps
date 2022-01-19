@@ -235,6 +235,42 @@ and how to
   which will fire some mouse events. They'll also mouse down and mouse up on the
   input and focus it! Lots of events!
 
+### Tips
+
+- We can any time use `screen.debug()` to see what's going on in the DOM.
+
+- Make use of builder functions to help your tests cases, and generate arbitrary
+  data with libraries like faker, instead of fixed values:
+
+```js
+// instead of
+const username = 'chucknorris'
+const password = 'i need no password'
+
+// you can do:
+const {username, password} = buildLoginForm()
+
+// ...
+const buildLoginForm = () => {
+  const username = faker.internet.userName()
+  const password = faker.internet.password()
+
+  return {username, password}
+}
+```
+
+- Also you can make the builder functions to accept overrides, for testing other
+  specific scenarios:
+
+```js
+const buildLoginForm = override => {
+  const username = faker.internet.userName()
+  const password = faker.internet.password()
+
+  return {username, password, ...override}
+}
+```
+
 ## Contributors
 
 Thanks goes to these wonderful people
