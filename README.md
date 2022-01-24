@@ -271,6 +271,29 @@ const buildLoginForm = override => {
 }
 ```
 
+- When testing api calls with libraries such as `msw` or `react-query` we can
+  make use of `waitForElementToBeRemoved` to wait for the loading indicator to
+  go away.
+
+```js
+test('handles server error', async () => {
+  server.use(
+    rest.get('/greeting', (req, res, ctx) => {
+      return res(ctx.status(500))
+    }),
+  )
+
+  render(<Fetch url="/greeting" />)
+
+  userEvent.click(screen.getByText('Load Greeting'))
+
+  await waitForElementToBeRemoved(() => screen.getByText('Loading...'))
+
+  expect(screen.getByRole('alert')).toHaveTextContent('Oops, failed to fetch!')
+  expect(screen.getByRole('button')).not.toHaveAttribute('disabled')
+})
+```
+
 ## Contributors
 
 Thanks goes to these wonderful people
