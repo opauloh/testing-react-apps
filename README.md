@@ -294,6 +294,37 @@ test('handles server error', async () => {
 })
 ```
 
+- When using `msw` its a good practice to share handlers between frontend and
+  node environments:
+
+```js
+const server = setupServer(...handlers)
+```
+
+- Prefer using roles whenever you can:
+
+```js
+// instead of
+// expect(screen.getByText(/password required/i)).toBeInTheDocument()
+
+// we can do:
+expect(screen.getByRole('alert')).toHaveTextContent(/password required/i)
+```
+
+- Make use of inline snapshots when dealing with contents that were to change in
+  the future
+
+```js
+// isntead of this:
+expect(screen.getByRole('alert')).toHaveTextContent(/password required/i)
+
+// we can do:
+expect(screen.getByRole('alert').textContent).toMatchInlineSnapshot(
+  `"password required"`,
+)
+// note that the styles and html elements are irrelevant for the test itself, so we can grab the textContent for the assertion
+```
+
 ## Contributors
 
 Thanks goes to these wonderful people
