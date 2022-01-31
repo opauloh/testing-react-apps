@@ -56,6 +56,9 @@ beforeAll(() => {
 afterAll(() => {
   server.close()
 })
+afterEach(() => {
+  server.resetHandlers()
+})
 
 test(`logging in displays the user's username`, async () => {
   render(<Login />)
@@ -107,4 +110,27 @@ test(`logging with invalid password `, async () => {
   expect(screen.getByRole('alert').textContent).toMatchInlineSnapshot(
     `"password required"`,
   )
+})
+
+test(`testing unexpected server error`, async () => {
+  const testErrorMessage = 'something went wrong'
+  server.use(
+    rest.post(
+      // note that it's the same URL as our app-wide handler
+      // so this will override the other.
+      'https://auth-provider.example.com/api/login',
+      async (req, res, ctx) => {
+        // your one-off handler here
+        return res(ctx.status(500), ctx.json({message: testErrorMessage}))
+      },
+    ),
+  )
+  // need to reset handlers after tests, otherwise next tests will be affected
+  render(<Login />)
+
+  userEvent.click(screen.getByRole('button', {name: /submit/i}))
+
+  await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
+
+  expect(screen.getByRole('alert')).toHaveTextContent(testErrorMessage)
 })

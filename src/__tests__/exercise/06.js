@@ -6,6 +6,11 @@ import {render, screen, act} from '@testing-library/react'
 import Location from '../../examples/location'
 
 // 🐨 set window.navigator.geolocation to an object that has a getCurrentPosition mock function
+beforeAll(() => {
+  window.navigator.geolocation = {
+    getCurrentPosition: jest.fn(),
+  }
+})
 
 // 💰 I'm going to give you this handy utility function
 // it allows you to create a promise that you can resolve/reject on demand.
@@ -26,11 +31,36 @@ function deferred() {
 // // assert on the resolved state
 
 test('displays the users current location', async () => {
+  const fakePosition = {
+    coords: {
+      latitude: -25.4803597,
+      longitude: -49.2717955,
+    },
+  }
+  // 🐨 create a deferred promise here
+  const {promise, resolve} = deferred()
+
+  navigator.geolocation.getCurrentPosition.mockImplementation(callback => {
+    promise.then(() => callback(fakePosition))
+  })
+
+  render(<Location />)
+  expect(screen.getByLabelText(/loading/i)).toBeInTheDocument()
   // 🐨 create a fakePosition object that has an object called "coords" with latitude and longitude
   // 📜 https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition
   //
-  // 🐨 create a deferred promise here
-  //
+  await act(async () => {
+    resolve()
+    await promise
+  })
+  expect(screen.queryByLabelText(/loading/i)).not.toBeInTheDocument()
+  expect(screen.getByText(/latitude/i)).toHaveTextContent(
+    `Latitude: ${fakePosition.coords.latitude}`,
+  )
+  expect(screen.getByText(/longitude/i)).toHaveTextContent(
+    `Longitude: ${fakePosition.coords.longitude}`,
+  )
+
   // 🐨 Now we need to mock the geolocation's getCurrentPosition function
   // To mock something you need to know its API and simulate that in your mock:
   // 📜 https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
@@ -39,7 +69,7 @@ test('displays the users current location', async () => {
   // function success(position) {}
   // function error(error) {}
   // navigator.geolocation.getCurrentPosition(success, error)
-  //
+
   // 🐨 so call mockImplementation on getCurrentPosition
   // 🐨 the first argument of your mock should accept a callback
   // 🐨 you'll call the callback when the deferred promise resolves
