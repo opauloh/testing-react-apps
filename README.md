@@ -370,6 +370,26 @@ function deferred() {
 // // assert on the resolved state
 ```
 
+- **act()** is a function that's built in to react-test-utils. In situations
+  where we are directly calling a function that results in calling a state
+  update or function, we have to use act.
+
+```js
+render(<Location />)
+expect(screen.getByLabelText(/loading/i)).toBeInTheDocument()
+await act(async () => {
+  resolve()
+  await promise
+})
+expect(screen.queryByLabelText(/loading/i)).not.toBeInTheDocument()
+expect(screen.getByText(/latitude/i)).toHaveTextContent(
+  `Latitude: ${fakePosition.coords.latitude}`,
+)
+expect(screen.getByText(/longitude/i)).toHaveTextContent(
+  `Longitude: ${fakePosition.coords.longitude}`,
+)
+```
+
 ### The merits of mocking
 
 One of the biggest challenges people face with testing is knowing what to test.
