@@ -390,6 +390,32 @@ expect(screen.getByText(/longitude/i)).toHaveTextContent(
 )
 ```
 
+- When testing contexts, we can make use of Wrappers to avoid having to pass
+  down the context to the component for every time we rerender:
+
+```js
+import {ThemeProvider} from '../../components/theme'
+
+const Wrapper = {children} => <ThemeProvider>{children}</ThemeProvider>
+
+render (<Button>Test</Button>, {wrapper: Wrapper})
+```
+
+or, in a more elaborated version, we can override the render method:
+
+```js
+import {render as tlRender} from '@testing-library/react'
+import {ThemeProvider} from '../../components/theme'
+
+function Wrapper({children}) {
+  return <ThemeProvider>{children}</ThemeProvider>
+}
+
+function render(ui, options) {
+  return tlRender(ui, {wrapper: Wrapper, ...options})
+}
+```
+
 ### The merits of mocking
 
 One of the biggest challenges people face with testing is knowing what to test.
