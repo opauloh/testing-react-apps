@@ -416,6 +416,25 @@ function render(ui, options) {
 }
 ```
 
+- you can configure jest.config.js, to add a moduleDirectories array, so that
+  jest will look for your scripts as they were modules, so you can use relative
+  paths:
+
+  ```js
+  moduleDirectories: [
+    '<rootDir>/src',
+    '<rootDir>/node_modules',
+  ],
+  ```
+
+### Custom hooks
+
+- Sometimes is better to only test the Components, that are using the custom
+  hooks, and not the hooks itself, as they can be seem as implementation
+  details, but other times, if you are providing a library to other developers,
+  or a high reusable hook, you should test it.
+  [Reference](https://kentcdodds.com/blog/how-to-test-custom-react-hooks)
+
 ### The merits of mocking
 
 One of the biggest challenges people face with testing is knowing what to test.
